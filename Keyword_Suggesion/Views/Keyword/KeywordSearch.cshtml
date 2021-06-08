@@ -1,0 +1,142 @@
+﻿@model Keyword_Suggesion.Models.Keywords
+
+@{
+    ViewBag.Title = "KeywordSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Keyword Search</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IsNew, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.IsNew, Keyword_Suggesion.Controllers.StaticValueController.ListIscreate(), "--SELECT--", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.IsNew, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group" id="createProject">
+        @Html.LabelFor(model => model.CreateProjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CreateProjectName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CreateProjectName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group" id="selectProject">
+        @Html.LabelFor(model => model.SelectProjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.SelectProjectName, Keyword_Suggesion.Controllers.StaticValueController.ListProjectName(), "--SELECT--", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.SelectProjectName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.keywords, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.keywords, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.keywords, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    @*<div class="form-group">
+        @Html.LabelFor(model => model.Select, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.Select, Keyword_Suggesion.Controllers.StaticValueController.ListSelect(), "--SELECT--", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Select, "", new { @class = "text-danger" })
+        </div>
+    </div>*@
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" id="ViewKey" value="Submit" class="btn btn-default" />
+        </div>
+    </div>
+
+</div>
+}
+
+
+
+@*<div id="inputSearch" style="text-align:center">
+
+        <input type="search" id="SelectKeyword" class="form-control center-block" />
+        <br />
+        <button type="button" id="btnUpload" class="btn btn-primary">Search</button>
+    </div>*@
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    if(@TempData["Message"] != null)
+  alert(@TempData["Message"]);
+</script>
+<script>
+    
+    $(document).ready(function () {
+        $(':input[type="submit"]').prop("disabled", true);
+
+        $('#CreateProjectName').val("");
+        $('#createProject').hide();
+        $('#SelectProjectName').val("");
+        $('#selectProject').hide();
+
+
+    });
+
+    $('#IsNew').on('change', function () {
+        if ($(this).val() == "1") {
+            $('#createProject').show();
+            $('#SelectProjectName').val("");
+            $('#selectProject').hide();
+            
+
+        }
+        else if ($(this).val() == "2") {
+            $('#CreateProjectName').val("");
+            $('#createProject').hide();
+            $('#selectProject').show();
+        }
+        else {
+            $('#CreateProjectName').val("");
+            $('#createProject').hide();
+            $('#SelectProjectName').val("");
+            $('#selectProject').hide();
+        }
+    });
+
+      $('#CreateProjectName').change(function () {
+            $.ajax({
+                url: '@Url.Action("CheckProjectName", "Keyword")',
+                type: 'post',
+                data: {
+                    ProjectName: $(this).val()
+                },
+                success: function (_result) {
+                    if (_result == "Failure") {
+                        $('#CreateProjectName').val("");
+                        swal("Project Name already exist");
+
+                    }
+                    else {
+                         $(':input[type="submit"]').prop('disabled', false);
+                    }
+                }
+            });
+      });
+    $('#btnUpload').on('click', function () {
+        $.ajax({
+
+            data: { 'Keyword': $('#SelectKeyword').val() },
+            type: 'POST',
+            dataType: 'json',
+            url: '/Keyword/Getkeyword',
+
+        });
+    });
+
+</script>

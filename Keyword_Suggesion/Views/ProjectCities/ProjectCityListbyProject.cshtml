@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Keyword_Suggesion.Models.ProjectCity>
+
+@{
+    ViewBag.Title = "ProjectCityListbyProject";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+
+<h2>@ViewBag.ProjectName - City List</h2>
+<hr />
+<br class="spacer" />
+<p>
+    @Html.ActionLink("Assign City", "AssignProjectCity", "Cities", new { ProjectName = ViewBag.ProjectName }, null)
+</p>
+
+<table class="table" id="Table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Project_city_uid)*@
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ProjectName)*@
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.HiddenFor(modelItem => item.Project_city_uid)
+                </td>
+                <td>
+                    @Html.HiddenFor(modelItem => item.ProjectName)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Keywords", "ProjectKeywordListbycity", new { CityName = item.City, ProjectName = item.ProjectName })
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.ActionLink("Back to Project", "SelectedProjectList","Project_Keyword", new { ProjectName = ViewBag.ProjectName }, null)
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+
+<script>
+
+    $('#Table').dataTable({
+        responsive: true,
+        "pageLength": 100
+    });
+
+</script>

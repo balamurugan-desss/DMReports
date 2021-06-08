@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Keyword_Suggesion.Models.ProjectKeywordmaster>
+
+@{
+    ViewBag.Title = "OrganicCityList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+<h2>Organic City List</h2>
+<br class="spacer" />
+<br class="spacer" />
+<div>
+
+    @using (Html.BeginForm("ImportFromExcel", "OrganicCity", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="col-sm-2">
+            <span>Select File  :</span>
+        </div>
+        <div class="col-sm-3">
+            <input class="form-control" type="file" name="postedFile" id="importFile" />
+        </div>
+        <div class="col-sm-3">
+            <input class="btn btn-primary" id="btnUpload" type="submit" value="Upload" />
+
+        </div>
+    }
+</div>
+<br class="spacer" />
+<br class="spacer" />
+<br class="spacer" />
+
+
+<p>
+    @Html.ActionLink("Create New", "CreateOrganicCity")
+</p>
+
+<table class="table" id="Table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Keyword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Keyword)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "UpdateOrganicCity", new { id = item.Id }) |
+                    @Html.ActionLink("Organic City Status", "OrganicCityStatus", new { ProjectName = item.ProjectName }) |
+                    @Html.ActionLink("Delete", "DeleteOrganicCity", new { id = item.Id }, new { onclick = "return confirm('Are you sure you want to delete this ?');" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@*@Html.ActionLink("Back to Project List", "ProjectList", "Project_Keyword")*@
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+
+<script>
+
+    $('#Table').dataTable({
+        responsive: true,
+        "pageLength": 100
+    });
+
+</script>

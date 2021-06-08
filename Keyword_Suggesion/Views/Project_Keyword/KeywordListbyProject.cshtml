@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Keyword_Suggesion.Models.ProjectKeyword>
+
+@{
+    ViewBag.Title = "KeywordListbyProject";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+
+<h2>@ViewBag.ProjectName - Keyword List</h2>
+<hr />
+<br class="spacer" />
+<p>
+    @Html.ActionLink("Create New", "CreateKeywordbyProject", new { Project = ViewBag.ProjectName })
+</p>
+<table class="table" id="Table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.KeywordName)
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ProjectName)*@
+            </th>
+
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KeywordName)
+                </td>
+                <td>
+                    @Html.HiddenFor(modelItem => item.ProjectName)
+                </td>
+
+
+                <td>
+                    @Html.ActionLink("Keyword Cities", "CitybyKeyword", new { ProjectName = item.ProjectName, Keyword = item.KeywordName }) |
+                    @Html.ActionLink("Suggesion Keywords", "SuggesionKeywords", new { Keyword = item.KeywordName, Project = item.ProjectName }) |
+                    @Html.ActionLink("Keyword Position", "Report","KeywordReport", new { Keyword = item.KeywordName, Project = item.ProjectName },null)
+
+                    @*@Html.ActionLink("Details", "Details", new { id=item.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.ActionLink("Back to Project", "SelectedProjectList", new { ProjectName = ViewBag.ProjectName})
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+
+    $('#Table').dataTable({
+        responsive: true
+    });
+
+</script>

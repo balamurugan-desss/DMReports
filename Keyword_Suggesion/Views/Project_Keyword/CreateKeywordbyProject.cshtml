@@ -1,0 +1,74 @@
+﻿@model Keyword_Suggesion.Models.ProjectKeyword
+
+@{
+    ViewBag.Title = "CreateKeywordbyProject";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Project Keyword</h2>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.HiddenFor(model => model.ProjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.KeywordName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.KeywordName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.KeywordName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to Keyword List", "KeywordListbyProject", new { Project = ViewBag.ProjectName })
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+
+    $('#KeywordName').change(function () {
+        $(':input[type="submit"]').prop('disabled', true);
+            $.ajax({
+                url: '@Url.Action("CheckKeywordName", "Keyword")',
+                type: 'post',
+                data: {
+                    KeywordName: $(this).val(),
+                    City: $('#City').val(),
+                    ProjectName: $('#ProjectName').val(),
+                },
+                success: function (_result) {
+                    if (_result == "Failure") {
+                        $('#KeywordName').val("");
+                        alert("Keyword Name already exist in the Project-Keyword");
+                        $(':input[type="submit"]').prop('disabled', false);
+                    }
+                    else {
+                         $(':input[type="submit"]').prop('disabled', false);
+                    }
+                }
+            });
+      });
+</script>

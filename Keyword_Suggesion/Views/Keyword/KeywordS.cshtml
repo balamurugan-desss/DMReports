@@ -1,0 +1,289 @@
+﻿@model Keyword_Suggesion.Models.Keywords
+
+@{
+    ViewBag.Title = "KeywordS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    .keyword-container {
+        margin-top: 5%;
+        margin-bottom: 5%;
+    }
+
+    .keyword-form-1 {
+        padding: 5%;
+        box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+        height: 500px;
+    }
+
+        .keyword-form-1 h3 {
+            text-align: center;
+            color: #333;
+        }
+
+    .keyword-form-2 {
+        padding: 5%;
+        background: #0062cc;
+        box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+    }
+
+        .keyword-form-2 h3 {
+            text-align: center;
+            color: #fff;
+        }
+
+    .keyword-container form {
+        padding: 10%;
+    }
+
+    .btnSubmit {
+        width: 50%;
+        border-radius: 1rem;
+        padding: 1.5%;
+        border: none;
+        cursor: pointer;
+    }
+
+    .keyword-form-1 .btnSubmit {
+        font-weight: 600;
+        color: #fff;
+        background-color: #0062cc;
+    }
+
+    .keyword-form-2 .btnSubmit {
+        font-weight: 600;
+        color: #0062cc;
+        background-color: #fff;
+    }
+
+
+</style>
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container keyword-container">
+    <div class="row">
+
+
+            <div class="col-md-6 keyword-form-1">
+                <h3>Save Keywords</h3>
+                <form id="SaveSide">
+              
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.IsNew, Keyword_Suggesion.Controllers.StaticValueController.ListIscreate(), "Create New Project ?", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IsNew, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.CreateProjectName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Create Project Name" } })
+                            @Html.ValidationMessageFor(model => model.CreateProjectName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.SelectProjectName, Keyword_Suggesion.Controllers.StaticValueController.ListProjectName(), "Select Project Name", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SelectProjectName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.keywords, new { htmlAttributes = new { @class = "form-control", @placeholder = "Select Keyword Name" } })
+                            @Html.ValidationMessageFor(model => model.keywords, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" id="btnSave" class="btnSubmit" value="Save Keyword" />
+                        </div>
+                    
+                </form>
+            </div>
+        
+
+        
+            <div class="col-md-6 keyword-form-1">
+                <h3>View Keywords</h3>
+                <div id="ViewSide">
+                    @using (Html.BeginForm("GetKeyword", "Keyword", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            
+                            @Html.DropDownListFor(model => model.IsNew, Keyword_Suggesion.Controllers.StaticValueController.ListIscreate(), "View New Keyword Suggesions ?", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IsNew, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.SelectProjectName, Keyword_Suggesion.Controllers.StaticValueController.ListProjectName(), "Select Project Name", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SelectProjectName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.DropDownListFor(model => model.keywordList, Keyword_Suggesion.Controllers.StaticValueController.ListProjectName(), "Select Keyword Name", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.keywordList, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.EditorFor(model => model.keywords, new { htmlAttributes = new { @class = "form-control", @placeholder = "Select Keyword Name" } })
+                            @Html.ValidationMessageFor(model => model.keywords, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" id="btnView" class="btnSubmit" value="View Keywords" />
+                        </div>
+                    }
+                    </div>
+            </div>
+        
+    </div>
+        
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#SaveSide').find('#CreateProjectName').val("");
+        $('#SaveSide').find('#SelectProjectName').val("");
+        $('#SaveSide').find('#keywords').val("");
+        $('#SaveSide').find('#IsNew').val("");
+
+        $('#SaveSide').find('#CreateProjectName').hide();
+        $('#SaveSide').find('#SelectProjectName').hide();
+        $('#SaveSide').find('#keywords').hide();
+
+        $('#ViewSide').find('#SelectProjectName').val("");
+        $('#ViewSide').find('#keywordList').val("");
+        $('#ViewSide').find('#keywords').val("");
+        $('#ViewSide').find('#IsNew').val("");
+        $('#ViewSide').find('#SelectProjectName').hide();
+        $('#ViewSide').find('#keywordList').hide();
+        $('#ViewSide').find('#keywords').hide();
+
+
+    });
+
+    $('#SaveSide').find('#IsNew').on('change', function () {
+        if ($(this).val() == "1") {
+            $('#SaveSide').find('#CreateProjectName').show();
+            $('#SaveSide').find('#SelectProjectName').val("");
+            $('#SaveSide').find('#SelectProjectName').hide();
+            $('#SaveSide').find('#keywords').val("");
+            $('#SaveSide').find('#keywords').show();
+
+        }
+        else if ($(this).val() == "2") {
+            $('#SaveSide').find('#CreateProjectName').val("");
+            $('#SaveSide').find('#CreateProjectName').hide();
+            $('#SaveSide').find('#SelectProjectName').show();
+            $('#SaveSide').find('#keywords').val("");
+            $('#SaveSide').find('#keywords').show();
+        }
+        else {
+            $('#SaveSide').find('#CreateProjectName').val("");
+            $('#SaveSide').find('#CreateProjectName').hide();
+            $('#SaveSide').find('#SelectProjectName').val("");
+            $('#SaveSide').find('#SelectProjectName').hide();
+            $('#SaveSide').find('#keywords').val("");
+            $('#SaveSide').find('#keywords').hide();
+        }
+    });
+
+       $('#ViewSide').find('#IsNew').on('change', function () {
+        if ($(this).val() == "2") {
+            $('#ViewSide').find('#SelectProjectName').show();
+
+            $('#ViewSide').find('#keywordList').val("");
+            $('#ViewSide').find('#keywords').val("");
+
+            $('#ViewSide').find('#keywordList').hide();
+            $('#ViewSide').find('#keywords').hide();
+
+
+        }
+        else if ($(this).val() == "1") {
+                     $('#ViewSide').find('#SelectProjectName').val("");
+            $('#ViewSide').find('#keywordList').val("");
+
+         $('#ViewSide').find('#SelectProjectName').hide();
+            $('#ViewSide').find('#keywordList').hide();
+            $('#ViewSide').find('#keywords').show();
+        }
+        else {
+                             $('#ViewSide').find('#SelectProjectName').val("");
+            $('#ViewSide').find('#keywordList').val("");
+            $('#ViewSide').find('#keywords').val("");
+                 $('#ViewSide').find('#SelectProjectName').hide();
+            $('#ViewSide').find('#keywordList').hide();
+            $('#ViewSide').find('#keywords').hide();
+        }
+    });
+
+    $('#ViewSide').find('#SelectProjectName').on('change', function () {
+        $.ajax({
+
+            data: { 'Projectname': $(this).val() },
+            type: 'POST',
+            dataType: 'json',
+            url: '/StaticValue/ListKeywords',
+            success: function (result) {
+                 $('#ViewSide').find('#keywordList').show();
+                $('#ViewSide').find("#keywordList").empty('rebuild');
+                $('#ViewSide').find("#keywordList").append('<option  value="">Select Keyword...</option>');
+                 $('#ViewSide').find("#keywordList").append('<option  value="AllKeywords">All Keyword</option>')
+                $.each(result, function (i, item) {
+                    $('#ViewSide').find("#keywordList").append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                    alert('We face some technical difficulties');
+                }
+           
+
+        });
+    });
+
+    $('#btnSave').on('click', function () {
+                var IsNew = $('#SaveSide').find('#IsNew').val();
+            var CreateProject = $('#SaveSide').find('#CreateProjectName').val();
+        var SelectProject= $('#SaveSide').find('#SelectProjectName').val();
+        var keyword = $('#SaveSide').find('#keywords').val();
+        $.ajax({
+            data: { 'isnew': IsNew, 'CreateProject': CreateProject,'SelectProject': SelectProject,'Keyword': keyword },
+            type: 'POST',
+            url: '/Keyword/Savekeyword',
+            success: function (_result) {
+                if(_result == "Success")
+                alert("Keyword are Saved Successfully");
+           }
+        });
+    });
+
+     $('#SaveSide').find('#CreateProjectName').change(function () {
+            $.ajax({
+                url: '@Url.Action("CheckProjectName", "Keyword")',
+                type: 'post',
+                data: {
+                    ProjectName: $(this).val()
+                },
+                success: function (_result) {
+                    if (_result == "Failure") {
+                        $('#CreateProjectName').val("");
+                        swal("Project Name already exist");
+
+                    }
+                    else {
+                         $(':input[type="submit"]').prop('disabled', false);
+                    }
+                }
+            });
+      });
+    //$('#btnView').on('click', function () {
+    //    var ProjectName = $('#ViewSide').find('#SelectProjectName').val();
+    //    var offkeyword = $('#ViewSide').find('#keywordList').val();
+    //    var onkeyword = $('#ViewSide').find('#keywords').val();
+    //    $.ajax({
+    //        data: { 'Project': ProjectName,'OffKeyword': offkeyword,'OnKeyword': onkeyword },
+    //        type: 'POST',
+    //        dataType: 'json',
+    //        url: '/Keyword/MoveKeyword',
+    //        success: function (result) {
+
+    //        }
+    //    });
+    //});
+</script>

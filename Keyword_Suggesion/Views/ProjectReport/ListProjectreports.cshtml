@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Keyword_Suggesion.Models.Report>
+
+@{
+    ViewBag.Title = "ListProjectreports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+
+<h2>List Project - Reports</h2>
+
+<p>
+    @Html.ActionLink("Create New", "InsertProjectreports")
+</p>
+<table class="table" id="Table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.google_Organic)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Google_organic_cites)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Google_my_business_cities)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.HiddenFor(modelItem => item.project_Report_uid)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.google_Organic)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Google_organic_cites)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Google_my_business_cities)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "UpdateProjectreports", new { id = item.project_Report_uid }) |
+                    @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+                    @Html.ActionLink("Delete", "DeleteProjectReport", new { Id = item.project_Report_uid }, new { onclick = "return confirm('Are you sure you want to delete this ?');" })
+                </td>
+            </tr>
+        }
+        </tbody>
+</table>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+
+    $('#Table').dataTable({
+        responsive: true,
+        "pageLength": 100
+    });
+
+</script>

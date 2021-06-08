@@ -1,0 +1,130 @@
+﻿@model IEnumerable<Keyword_Suggesion.Models.ProjectCity>
+
+@{
+    ViewBag.Title = "AssignProjectCity";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+
+<h2>Assign Project City</h2>
+<hr />
+<br class="spacer" />
+<style>
+    .button {
+        width: 50%;
+        float: left;
+        padding: 1%;
+    }
+
+    .first {
+        text-align: right;
+    }
+</style>
+@using (Html.BeginForm("AssignProjectCity", "Cities", FormMethod.Post))
+{
+    <table id="CityTable" class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.City)
+                </th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><input type="checkbox" name="chkRow" value="@item.City" /></td>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.ProjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="button run first">
+        <p><button class="btn btn-primary">Assign City</button></p>
+    </div>
+ }
+<div class="button run">
+    <p><button id="btncancel" class="btn btn-danger">Cancel</button></p>
+</div>
+
+@Html.ActionLink("Back to City List", "ProjectCityListbyProject", "ProjectCities", new { ProjectName = ViewBag.ProjectName }, null)
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+
+<script>
+
+    $('#CityTable').dataTable({
+        responsive: true,
+        "pageLength": 100
+    });
+
+</script>
+<script type="text/javascript">
+
+      $('#btncancel').on('click', function () {
+         var referrer =  document.referrer;
+              window.location = referrer;
+          
+    });
+         $(function () {
+            //Create the CheckBox element.
+            var chkHeader = $("<input type = checkbox id = 'chkHeader'/>");
+
+            //Append it to the First cell of Header Row.
+            $("#CityTable th:first-child").append(chkHeader);
+
+            //Assign Click event handler to the Header Row CheckBox.
+            chkHeader.click(function () {
+                if ($(this).is(":checked")) {
+                    //If the Header Row CheckBox is checked, check all Row CheckBoxes.
+                    $("#CityTable td input[type=checkBox]").attr("checked", "checked");
+                } else {
+                    //If the Header Row CheckBox is NOT checked, uncheck all Row CheckBoxes.
+                    $("#CityTable td input[type=checkBox]").removeAttr("checked");
+                }
+            });
+
+            //Assign Click event handler to each Row CheckBox.
+            $("#CityTable input[name=chkRow]").click(function () {
+                UpdateHeaderRowCheckBox(chkHeader);
+            });
+
+            //Retain selection of Row CheckBoxes.
+            var selected = "@TempData["Message"]".split(',');
+            for (var i in selected) {
+                $("#CityTable input[value='" + selected[i] + "']").attr("checked", "checked");
+            }
+            //Retain selection of Header Row CheckBox.
+            UpdateHeaderRowCheckBox(chkHeader);
+        });
+
+        function UpdateHeaderRowCheckBox(chkHeader) {
+            if ($("#CityTable td input[type=checkBox]:checked").length == $("#CityTable td input[type=checkBox]").length) {
+                //If all the Row CheckBoxes are checked, check the Header Row CheckBox.
+                chkHeader.attr("checked", "checked");
+            } else {
+                //Even if one of the Row CheckBoxes is NOT checked, uncheck the Header Row CheckBox.
+                chkHeader.removeAttr("checked");
+            }
+        }
+</script>
